@@ -1,16 +1,11 @@
-from lxml import etree
+from lxml import etree # pip install lxml==4.3.2
 from xml.dom import minidom
 from collections import defaultdict
-
-import openpyxl
-import xlsxwriter
-
+import openpyxl #pip install openpyxl==2.5.14
+import xlsxwriter #pip install XlsxWriter==1.2.8
 from datetime import datetime
-
 import os
-
 import glob
-
 import time
 
 class pomToExcel():
@@ -21,13 +16,15 @@ class pomToExcel():
         self.projectName = None
         self.groupId = None
         self.artifactId = None
-        self.counter = None
+        self.counter = 0
         self.infoValue = None
         self.last_col_a_value = None
         self.excelCounter = None
         self.xmlCounter = None
         self.elementCounter = 0
         self.chosen_element = None
+        self.parseCounter = 0 
+        self.repoName = None
 
 
 
@@ -58,38 +55,31 @@ class pomToExcel():
         #artifactId is used to find the first tag that matches artifactId in the pom files
         #projectName is used to get the data from artifactId
         artifactId = project.getElementsByTagName('artifactId')[0]
-        self. projectName = artifactId.firstChild.data
+        self.projectName = artifactId.firstChild.data
 
         #depend sets to xpath to fine the depencies
         #dependencyInfo sets an empty dictionary
         depend = root.xpath("//*[local-name()='dependency']")
         dependencyInfo = defaultdict(dict)
 
-        unwanted = ['scope', 'type']
-
         #For loops iterated through the file to store data inside the dictionary
         #data beind retrived is groupId, artifactId and version
         for dep in depend:
             infoList = []
-            counter += 1
+            self.counter += 1
             for child in dep.getchildren():
                 infoList.append(child.tag.split('}')[1])
                 infoList.append(child.text)
 
             #list where data is being stored
             dependencyInfo[infoList[1]].update({infoList[2] : infoList[3],infoList[4] : infoList[5]})
-                            #{'junit': {'artifactId': 'junit', 'version': '3.8.1'},
-                            #'slf4j-api': {'groupId': 'org.slf4j', 'type': 'jar'},
-
+                            
         #print statement of all the data
-        self.counter = counter
         print(datetime.now(),"""%i Dependency where found in %s's pom file.""" % (self.counter,self.projectName))
         #print(dependencyInfo)
-
-
-        firstloop = 0
+        
         for dependencyId, info in dependencyInfo.items():
-            firstloop += 1
+            self.parseCounter += 1
             additionalInfo = {}
 
             for infoName, infoValue in info.items():
@@ -101,14 +91,15 @@ class pomToExcel():
                     self.groupId = info["groupId"]
                 else:
                     additionalInfo[infoName] = infoValue
-
+            
 
             # if self.groupId:
+            #     print()
             #     print(f"groupId = {self.groupId}")
-            #
+            
             # if self.artifactId:
             #     print(f"artifactId = {self.artifactId}")
-            #
+            
             # for infoName, infoValue in additionalInfo.items():
             #     print(f"{infoName} = {infoValue}")
 
@@ -116,7 +107,7 @@ class pomToExcel():
             self.excelWriting()
 
 
-        print(datetime.now(),"%i dependencies where parsed " %firstloop)
+        print(datetime.now(),"%i dependencies where parsed " %self.parseCounter)
         print(datetime.now(),"%i dependencies where written in excel " %self.excelCounter)
 
     def excelWriting(self):
@@ -131,7 +122,7 @@ class pomToExcel():
         sheet = xfile["Sheet1"]
 
         self.excelCounter = 0
-        for k in range(0, self.counter):
+        for k in range(0, self.parseCounter):
             i = self.last_col_a_value
             self.excelCounter += 1
 
@@ -141,7 +132,7 @@ class pomToExcel():
             column_cell_artifactId= "D"
             column_cell_Version= "E"
 
-            sheet[column_cell_reponame+str(i+1)] = self.projectName
+            # sheet[column_cell_reponame+str(i+1)] = self.projectName
             sheet[column_cell_projectname+str(i+1)] = self.projectName
             sheet[column_cell_groupID+str(i+1)] = self.groupId
             sheet[column_cell_artifactId+str(i+1)] = self.artifactId
@@ -157,12 +148,11 @@ class pomToExcel():
         sheet = xfile["Sheet1"]
 
         last_row = sheet.max_row
-        while sheet.cell(column=1, row=last_row).value is None and last_row > 0:
+        while sheet.cell(column=2, row=last_row).value is None and last_row > 0:
             last_row -= 1
-        self.last_col_a_value = sheet.cell(column=1, row=last_row).row
+        self.last_col_a_value = sheet.cell(column=2, row=last_row).row
 
         xfile.save('Libraries.xlsx')
-
 
     def create(self):
 
@@ -226,7 +216,7 @@ class pomToExcel():
         #only prints out a set with the files inside.
         sets_w_onlyfile = set(glob.glob(ext))
 
-        #makes a list from thr set then sorts it
+        #makes a list from the set then sorts it
         my_list = list(sets_w_onlyfile)
         my_list.sort()
 
