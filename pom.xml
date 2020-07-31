@@ -26,17 +26,17 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hibernate1</groupId>
+      <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>3.6.3.Final</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate2</groupId>
+      <groupId>org.hibernate</groupId>
       <artifactId>hibernate</artifactId>
       <version>3.2.5.ga</version>
     </dependency>
     <dependency>
-      <groupId>org.hibernate3</groupId>
+      <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
       <version>3.3.2.GA</version>
     </dependency>
