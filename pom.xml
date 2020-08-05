@@ -16,8 +16,8 @@
 		<com.fanniemae.market.version>1.1.0-SNAPSHOT</com.fanniemae.market.version>
 		<maven-surefire-plugin-version>2.22.1</maven-surefire-plugin-version>
 		<maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
 		<springfox-swagger.version>2.9.2</springfox-swagger.version>
 		<powermock.version>1.4.9</powermock.version>
@@ -35,7 +35,7 @@
 		<org.nuiton.thirdparty.version>0.9-6</org.nuiton.thirdparty.version>
 		<sonar.coverage.exclusions>
 			**/com/fanniemae/mbs/dgs/constants/*,
-			**/com/fanniemae/mbs/dgs/application/MBSDGSApplication.java,	
+			**/com/fanniemae/mbs/dgs/application/MBSDGSApplication.java,
 			**/com/fanniemae/mbs/dgs/cache/*
 		</sonar.coverage.exclusions>
 	</properties>
@@ -44,7 +44,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>$3.8.1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

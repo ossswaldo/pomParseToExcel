@@ -26,6 +26,9 @@ class pomToExcel():
         self.chosen_element = None
         self.parseCounter = 0
         self.repoName = None
+        self.propertyCounter = 0
+        self.notInPropertyCounter = 0
+        self.foundPropertyCounter = 0
 
 
 
@@ -44,15 +47,8 @@ class pomToExcel():
     def parse(self):
         # File that is being read
         pom= self.chosen_element
-        # counter is used to determined how many dependencies were found in pom file.
-        counter = 0
         # project is used to parse the file to exclusivly find the first artifact ID to find project name
         project = minidom.parse(pom)
-        #tree is used to parse the pom files and to iterate trough the file to find the depencies
-        #root gets the root of the file
-        tree = etree.parse(pom)
-        root = tree.getroot()
-
         #artifactId is used to find the first tag that matches artifactId in the pom files
         #projectName is used to get the data from artifactId
         artifactId = project.getElementsByTagName('artifactId')[0]
@@ -100,6 +96,14 @@ class pomToExcel():
 
 
         print(datetime.now(),"%i dependencies where parsed " %self.parseCounter)
+
+        if(self.foundPropertyCounter > 0 and self.notInPropertyCounter == 0):
+            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, all where found" %(self.foundPropertyCounter,self.propertyCounter))
+        elif(self.foundPropertyCounter > 0 and self.notInPropertyCounter > 0):
+            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, some where found the rest where not found " %(self.foundPropertyCounter,self.propertyCounter))
+        elif(self.foundPropertyCounter == 0 and self.notInPropertyCounter > 0):
+            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, none where not found " %(self.foundPropertyCounter,self.propertyCounter))
+
         print(datetime.now(),"%i dependencies where written in excel " %self.excelCounter)
 
     def parseVersion(self):
@@ -107,8 +111,23 @@ class pomToExcel():
         verifyVersion = "$" in self.version
 
         if(verifyVersion == True):
-            self.version = "NoobCAKE"
-            print(verifyVersion)
+            self.propertyCounter  +=1
+            versionParsed = self.version.replace('{', '').replace('$', '').replace('}', '')
+            # File that is being read
+            pom= self.chosen_element
+            # project is used to parse the file to exclusivly find the first artifact ID to find project name
+            project = minidom.parse(pom)
+            try:
+                #artifactId is used to find the first tag that matches versionParsed in the pom files
+                artifactId = project.getElementsByTagName(versionParsed)[0]
+                self.version = artifactId.firstChild.data
+                # counter is used to determined how many dependencies were looked in property pom file  section.
+                self.foundPropertyCounter  +=1
+            except:
+                self.notInPropertyCounter +=1
+                pass
+
+
 
     def excelWriting(self):
 
