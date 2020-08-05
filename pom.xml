@@ -1,22 +1,44 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>com.javatpoint.application1</groupId>
-  <artifactId>my-application1</artifactId>
-  <version>1.0</version>
-  <packaging>jar</packaging>
-
-  <name>Maven Quick Start Archetype</name>
-  <url>http://maven.apache.org</url>
+<groupId>com.fanniemae.mbs.dgs</groupId>
+	<artifactId>mbs-dgs-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>mbs-dgs-service</name>
+	<description>Demo project for Spring Boot</description>
 
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+ <properties>
+		<spring-boot-starter-web.version>2.1.9.RELEASE</spring-boot-starter-web.version>
+		<spring-boot-starter-web-services.version>2.1.9.RELEASE</spring-boot-starter-web-services.version>
+		<org.springframework.version>5.1.10.RELEASE</org.springframework.version>
+		<org.springframework.boot.version>1.2.5.RELEASE</org.springframework.boot.version>
+		<maven-compiler-plugin-version>3.8.0</maven-compiler-plugin-version>
+		<com.fanniemae.market.version>1.1.0-SNAPSHOT</com.fanniemae.market.version>
+		<maven-surefire-plugin-version>2.22.1</maven-surefire-plugin-version>
+		<maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+		<springfox-swagger.version>2.9.2</springfox-swagger.version>
+		<powermock.version>1.4.9</powermock.version>
+		<com.google.guava.version>23.0</com.google.guava.version>
+		<org.ejml.version>0.37.1</org.ejml.version>
+		<com.jayway.jsonpath.version>2.1.0</com.jayway.jsonpath.version>
+		<org.mockito.version>2.23.0</org.mockito.version>
+		<com.tibco.version>0.0.1</com.tibco.version>
+		<org.apache.httpcomponents.version>4.5.10</org.apache.httpcomponents.version>
+		<org.apache.commons.version>3.6</org.apache.commons.version>
+		<com.amazonaws.version>1.11.205</com.amazonaws.version>
+		<junit.version>4.12</junit.version>
+		<br.com.ingenieux.version>1.5.0</br.com.ingenieux.version>
+		<org.apache.poi.version>3.17</org.apache.poi.version>
+		<org.nuiton.thirdparty.version>0.9-6</org.nuiton.thirdparty.version>
+		<sonar.coverage.exclusions>
+			**/com/fanniemae/mbs/dgs/constants/*,
+			**/com/fanniemae/mbs/dgs/application/MBSDGSApplication.java,	
+			**/com/fanniemae/mbs/dgs/cache/*
+		</sonar.coverage.exclusions>
+	</properties>
 
   <dependencies>
     <dependency>
