@@ -20,7 +20,7 @@ class pomToExcel():
         self.counter = 0
         self.version = None
         self.last_col_a_value = None
-        self.excelCounter = None
+        self.excelCounter = 0
         self.xmlCounter = None
         self.elementCounter = 0
         self.chosen_element = None
@@ -29,6 +29,7 @@ class pomToExcel():
         self.propertyCounter = 0
         self.notInPropertyCounter = 0
         self.foundPropertyCounter = 0
+        self.totalWritenCounter = 0
 
 
 
@@ -39,8 +40,11 @@ class pomToExcel():
         for k in range(self.xmlCounter):
             self.fileHandler()
             self.parse()
+            self.printStats()
+            self.resetCounter()
             print()
             k += 1
+        print("--- %i dependencies written  ---"%(self.totalWritenCounter))
         print("--- %s seconds to complete ---" % round(time.time() - start_time, 2))
 
 
@@ -94,24 +98,13 @@ class pomToExcel():
 
                     self.excelWriting()
 
-
-        print(datetime.now(),"%i dependencies where parsed " %self.parseCounter)
-
-        if(self.foundPropertyCounter > 0 and self.notInPropertyCounter == 0):
-            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, all where found" %(self.foundPropertyCounter,self.propertyCounter))
-        elif(self.foundPropertyCounter > 0 and self.notInPropertyCounter > 0):
-            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, some where found the rest where not found " %(self.foundPropertyCounter,self.propertyCounter))
-        elif(self.foundPropertyCounter == 0 and self.notInPropertyCounter > 0):
-            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, none where not found " %(self.foundPropertyCounter,self.propertyCounter))
-
-        print(datetime.now(),"%i dependencies where written in excel " %self.excelCounter)
-
     def parseVersion(self):
 
         verifyVersion = "$" in self.version
 
         if(verifyVersion == True):
             self.propertyCounter  +=1
+            versionTOBEParsed = self.version
             versionParsed = self.version.replace('{', '').replace('$', '').replace('}', '')
             # File that is being read
             pom= self.chosen_element
@@ -140,10 +133,9 @@ class pomToExcel():
         xfile.sheetnames
         sheet = xfile["Sheet1"]
 
-        self.excelCounter = 0
+        
         for k in range(0, self.parseCounter):
             i = self.last_col_a_value
-            self.excelCounter += 1
 
             column_cell_reponame= "A"
             column_cell_projectname= "B"
@@ -158,6 +150,8 @@ class pomToExcel():
             sheet[column_cell_Version+str(i+1)] = self.version
 
         xfile.save('Libraries.xlsx')
+        self.excelCounter += 1
+        self.totalWritenCounter +=1
 
 
     def lastcell(self):
@@ -256,6 +250,27 @@ class pomToExcel():
 
 
         self.elementCounter += 1
+    
+    def printStats(self):
+        print(datetime.now(),"%i dependencies where parsed " %self.parseCounter)
+
+        if(self.foundPropertyCounter > 0 and self.notInPropertyCounter == 0):
+            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, all where found" %(self.foundPropertyCounter,self.propertyCounter))
+        elif(self.foundPropertyCounter > 0 and self.notInPropertyCounter > 0):
+            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, some where found the rest where not found " %(self.foundPropertyCounter,self.propertyCounter))
+        elif(self.foundPropertyCounter == 0 and self.notInPropertyCounter > 0):
+            print(datetime.now(),"%i dependencies out of %i where updated from the properties section from then .xml file, none where not found " %(self.foundPropertyCounter,self.propertyCounter))
+
+        print(datetime.now(),"%i dependencies where written in excel " %self.excelCounter)
+
+    def resetCounter(self):
+        self.counter = 0
+        self.parseCounter = 0
+        self.propertyCounter = 0
+        self.excelCounter = 0
+        self.notInPropertyCounter = 0
+        self.foundPropertyCounter = 0
+
 
 
 if __name__== "__main__":
